@@ -23,6 +23,15 @@ var rootCmd = &cobra.Command{
 		fmt.Printf("- %d scripts\n", result.Scripts)
 		fmt.Printf("- %d images\n", result.Images)
 		fmt.Printf("- %d link resources\n", result.Links)
+
+		if css, err := downloader.ScanCss(targetDir, url); err != nil {
+			fmt.Println("_ Error downloading additional resources")
+		} else {
+			for _, file := range css {
+				fmt.Printf("_ Found file %s\n", file)
+			}
+			fmt.Printf("- Downloaded %d additional resources.\n", len(css))
+		}
 	},
 }
 
