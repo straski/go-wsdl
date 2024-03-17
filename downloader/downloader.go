@@ -7,6 +7,7 @@ import (
 	"golang.org/x/exp/slices"
 	"io"
 	"io/fs"
+	"log"
 	"net/http"
 	url2 "net/url"
 	"os"
@@ -15,7 +16,7 @@ import (
 	"time"
 )
 
-// Result holds all the resource links
+// Result holds all the links to different resources
 type Result struct {
 	Links   int
 	Ahrefs  int
@@ -37,7 +38,10 @@ func Download(url, targetDir string) *Result {
 		colly.Async(),
 	)
 
-	c.Limit(&colly.LimitRule{DomainGlob: "*", Parallelism: 8})
+	err := c.Limit(&colly.LimitRule{DomainGlob: "*", Parallelism: 8})
+	if err != nil {
+		return nil
+	}
 
 	c.OnRequest(func(r *colly.Request) {
 		r.Ctx.Put("filepath", targetDir+(r.URL.Path))
@@ -47,15 +51,20 @@ func Download(url, targetDir string) *Result {
 
 	c.OnResponse(func(r *colly.Response) {
 		ensureDirectoryExists(r.Ctx.Get("dirname"))
-		r.Save(r.Ctx.Get("filepath"))
-
+		err := r.Save(r.Ctx.Get("filepath"))
+		if err != nil {
+			return
+		}
 	})
 
 	c.OnHTML("link", func(e *colly.HTMLElement) {
 		link := e.Attr("href")
 		if !slices.Contains(links, link) {
 			links = append(links, link)
-			c.Visit(e.Request.AbsoluteURL(link))
+			err := c.Visit(e.Request.AbsoluteURL(link))
+			if err != nil {
+				return
+			}
 		}
 	})
 
@@ -63,7 +72,10 @@ func Download(url, targetDir string) *Result {
 		link := e.Attr("href")
 		if !slices.Contains(ahrefs, link) {
 			ahrefs = append(ahrefs, link)
-			c.Visit(e.Request.AbsoluteURL(link))
+			err := c.Visit(e.Request.AbsoluteURL(link))
+			if err != nil {
+				return
+			}
 		}
 	})
 
@@ -71,7 +83,10 @@ func Download(url, targetDir string) *Result {
 		link := e.Attr("src")
 		if !slices.Contains(images, link) {
 			images = append(images, link)
-			c.Visit(e.Request.AbsoluteURL(link))
+			err := c.Visit(e.Request.AbsoluteURL(link))
+			if err != nil {
+				return
+			}
 		}
 	})
 
@@ -79,11 +94,17 @@ func Download(url, targetDir string) *Result {
 		link := e.Attr("src")
 		if !slices.Contains(scripts, link) {
 			scripts = append(scripts, link)
-			c.Visit(e.Request.AbsoluteURL(link))
+			err := c.Visit(e.Request.AbsoluteURL(link))
+			if err != nil {
+				return
+			}
 		}
 	})
 
-	c.Visit(url)
+	err = c.Visit(url)
+	if err != nil {
+		return nil
+	}
 	c.Wait()
 
 	return newResult(len(links), len(ahrefs), len(scripts), len(images))
@@ -120,11 +141,9 @@ func getFonts(cssFile, typ, parentDir, targetDir, url string) (res []string, err
 					fullFontUrl := strings.Replace(fullFontPath, targetDir, url, 1)
 
 					ensureDirectoryExists(fontDir)
-
 					if err := downloadUrlToFile(fullFontUrl, fullFontPathAbs); err != nil {
 						return res, err
 					}
-
 					res = append(res, fullFontUrl)
 				}
 			}
@@ -136,7 +155,7 @@ func getFonts(cssFile, typ, parentDir, targetDir, url string) (res []string, err
 // findFileByExtension finds a file by extension name
 func findFileByExtension(dir, ext string) []string {
 	var a []string
-	filepath.WalkDir(dir, func(s string, d fs.DirEntry, e error) error {
+	err := filepath.WalkDir(dir, func(s string, d fs.DirEntry, e error) error {
 		if e != nil {
 			return e
 		}
@@ -145,6 +164,9 @@ func findFileByExtension(dir, ext string) []string {
 		}
 		return nil
 	})
+	if err != nil {
+		return nil
+	}
 	return a
 }
 
@@ -154,7 +176,12 @@ func findStringInFile(filepath, needle string) (res []string) {
 	if err != nil {
 		return res
 	}
-	defer f.Close()
+	defer func(f *os.File) {
+		err := f.Close()
+		if err != nil {
+			log.Println("_ Info: error closing file.")
+		}
+	}(f)
 
 	scanner := bufio.NewScanner(f)
 	line := 1
@@ -183,18 +210,29 @@ func getStringBetweenStrings(haystack, start, end string) (result string) {
 	return haystack[s : s+e]
 }
 
+// downloadUrlToFile downloads the contents of the URL to a local file
 func downloadUrlToFile(url, filepath string) (err error) {
 	out, err := os.Create(filepath)
 	if err != nil {
 		return err
 	}
-	defer out.Close()
+	defer func(out *os.File) {
+		err := out.Close()
+		if err != nil {
+			log.Println("_ Info: error closing file.")
+		}
+	}(out)
 
 	res, err := http.Get(url)
 	if err != nil {
 		return err
 	}
-	defer res.Body.Close()
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			log.Println("_ Info: error closing file.")
+		}
+	}(res.Body)
 
 	_, err = io.Copy(out, res.Body)
 	if err != nil {
