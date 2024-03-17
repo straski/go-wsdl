@@ -1,12 +1,14 @@
 # go-wsdl
 
-A website downloader written in Go. By default it will download all resources on http://books.toscrape.com to a directory named `output`. 
+A website downloader written in Go. By default it will download all resources on http://books.toscrape.com to a directory named `output`, however this is configurable with flags.
 
-## Usage
+# Usage
 
-### Pre-built binaries
+The easiest way to get started is by downloading the pre-built binaries for your system. Alternatively you can build binaries from source or run the code with on-the-fly compilation using `go run`.
 
-Choose and download a pre-built binary for your OS/arch:
+## Pre-built binaries
+
+### 1. Choose and download a pre-built binary for your OS and architecture:
 
 | OS      | Arch  | Binary                          |
 |---------|-------|---------------------------------|
@@ -17,20 +19,32 @@ Choose and download a pre-built binary for your OS/arch:
 | Windows | 386   | [go-wsdl-win32.exe](url)    |
 | Windows | amd64 | [go-wsdl-win64.exe](url)    |
 
+### 2. Run the command
+
+> If required add execution permissions to the file: ```chmod +x go-wsdl-<OS>-<ARCH>```
+
 In your terminal run the following command:
 
-```./bin/go-wsdl-<OS>-<ARCH>```
-
-If required add execution permission to the file:
-
-```chmod +x bin/go-wsdl-<OS>-<ARCH>```
+```./go-wsdl-<OS>-<ARCH>```
 
 It takes two optional arguments:
 
-- `url` (`u`) - the URL of the page to download (default is http://)
-- `dir` (`u`) - the directory to save files to (default is `output`)
+| Name | Shorthand | Description                             | Default                              |
+|------|-----------|-----------------------------------------|--------------------------------------|
+| url  | u         | The URL to download the files from.     | http://books.toscrape.com/index.html |
+| dir  | d         | The directory to download the files to. | output                               |
 
-### Build from source
+Usage with arguments:
+
+```./go-wsdl-<OS>-<ARCH> --url <URL> --dir <DIR>```
+
+### Windows
+
+```go-wsdl-<OS>-<ARCH>.exe```
+
+> If you use [MinGW](https://www.mingw-w64.org) (comes with [Git for Windows](https://git-scm.com/download/win)), run the commands as if you're on a Unix-based system. 
+
+## Build from source
 
 To build your binaries from source, use the provided Makefile:
 
@@ -38,12 +52,13 @@ To build your binaries from source, use the provided Makefile:
 
 This will build binaries for all supported architectures listed above. The binaries are stored in the `bin` dir.
 
-### Run without build
+## Run with ``go run``
 
-To run the tool without building it:
+To execute the source code on-the-fly:
 
 ```
 go mod vendor
 go mod verify
 go run main.go 
 ```
+
