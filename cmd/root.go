@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"fmt"
+	"github.com/straski/go-wsdl/downloader"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -14,7 +16,13 @@ var rootCmd = &cobra.Command{
 	Short: "A website download tool",
 	Long:  `Download a whole website by providing the site's URL.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		// call downloader.download
+
+		result := downloader.Download(url, targetDir)
+
+		fmt.Printf("- %d pages\n", result.Ahrefs)
+		fmt.Printf("- %d scripts\n", result.Scripts)
+		fmt.Printf("- %d images\n", result.Images)
+		fmt.Printf("- %d link resources\n", result.Links)
 	},
 }
 
