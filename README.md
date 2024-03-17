@@ -62,3 +62,8 @@ go mod verify
 go run main.go 
 ```
 
+# Tests
+
+To run tests, execute:
+
+```make test```

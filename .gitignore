@@ -3,6 +3,7 @@
 
 bin
 output
+_testrun
 
 *.exe
 *.exe~

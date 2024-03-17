@@ -6,5 +6,9 @@ build:
 	env GOOS=linux GOARCH=amd64 go build -ldflags "-w" -o bin/go-wsdl-linux-amd64 main.go
 	env GOOS=linux GOARCH=386 go build -ldflags "-w" -o bin/go-wsdl-linux-386 main.go
 
- clean:
+clean:
 	rm -rf bin/*
+
+
+test:
+	go test -v ./...
