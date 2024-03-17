@@ -17,7 +17,7 @@ var targetDir string
 var rootCmd = &cobra.Command{
 	Use:     "go-wsdl",
 	Short:   "A website download tool",
-	Version: "0.1.0",
+	Version: "0.1.1",
 	Long:    `Download a whole website by providing the site's URL.`,
 	Run: func(cmd *cobra.Command, args []string) {
 

@@ -135,12 +135,13 @@ func getFonts(cssFile, typ, parentDir, targetDir, url string) (res []string, err
 			if strings.Contains(fontResource, typ) {
 				fontResourcePath := getStringBetweenStrings(fontResource, "url('", "')")
 				if fontResourcePath != "" {
-					fullFontPath := parentDir + "/" + fontResourcePath
-					fontDir := filepath.Dir(fullFontPath)
+					webPath := strings.ReplaceAll(parentDir, "\\", "/")
+					fullFontPath := filepath.Join(webPath, fontResourcePath)
 					fullFontPathAbs := filepath.Dir(fullFontPath) + "/" + filepath.Base(fullFontPath)
 					fullFontUrl := strings.Replace(fullFontPath, targetDir, url, 1)
+					fullFontUrl = strings.ReplaceAll(fullFontUrl, "\\", "/")
 
-					ensureDirectoryExists(fontDir)
+					ensureDirectoryExists(filepath.Dir(fullFontPath))
 					if err := downloadUrlToFile(fullFontUrl, fullFontPathAbs); err != nil {
 						return res, err
 					}

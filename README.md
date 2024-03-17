@@ -12,12 +12,12 @@ The easiest way to get started is by downloading the pre-built binaries for your
 
 | OS      | Arch  | Binary                                                                                                  |
 |---------|-------|---------------------------------------------------------------------------------------------------------|
-| Linux   | 386   | [go-wsdl-linux-386](https://github.com/straski/go-wsdl/releases/download/0.1.0/go-wsdl-linux-386)       |
-| Linux   | amd64 | [go-wsdl-linux-amd64](https://github.com/straski/go-wsdl/releases/download/0.1.0/go-wsdl-linux-amd64)   |
-| MacOS   | arm64 | [go-wsdl-darwin-arm64](https://github.com/straski/go-wsdl/releases/download/0.1.0/go-wsdl-darwin-arm64) |
-| MacOS   | amd64 | [go-wsdl-darwin-amd64](https://github.com/straski/go-wsdl/releases/download/0.1.0/go-wsdl-darwin-amd64) |
-| Windows | 386   | [go-wsdl-win32.exe](https://github.com/straski/go-wsdl/releases/download/0.1.0/go-wsdl-win32.exe)       |
-| Windows | amd64 | [go-wsdl-win64.exe](https://github.com/straski/go-wsdl/releases/download/0.1.0/go-wsdl-win64.exe)       |
+| Linux   | 386   | [go-wsdl-linux-386](https://github.com/straski/go-wsdl/releases/download/0.1.1/go-wsdl-linux-386)       |
+| Linux   | amd64 | [go-wsdl-linux-amd64](https://github.com/straski/go-wsdl/releases/download/0.1.1/go-wsdl-linux-amd64)   |
+| MacOS   | arm64 | [go-wsdl-darwin-arm64](https://github.com/straski/go-wsdl/releases/download/0.1.1/go-wsdl-darwin-arm64) |
+| MacOS   | amd64 | [go-wsdl-darwin-amd64](https://github.com/straski/go-wsdl/releases/download/0.1.1/go-wsdl-darwin-amd64) |
+| Windows | 386   | [go-wsdl-win32.exe](https://github.com/straski/go-wsdl/releases/download/0.1.1/go-wsdl-win32.exe)       |
+| Windows | amd64 | [go-wsdl-win64.exe](https://github.com/straski/go-wsdl/releases/download/0.1.1/go-wsdl-win64.exe)       |
 
 ### 2. Run the command
 
